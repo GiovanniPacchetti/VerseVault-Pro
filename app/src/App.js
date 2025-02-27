@@ -45,3 +45,12 @@ function App() {
 }
 
 export default App;
+  
+/*  In the code above, we have created a simple login form with email and password fields. We have used the  useState  hook to create state variables for email, password, and message. The  handleLogin  function is called when the form is submitted. It checks if the email and password match the hardcoded values and sets the message accordingly. 
+  Now, let’s run the application and see the login form in action. 
+  Run the React Application 
+  To run the React application, execute the following command in the terminal: 
+  npm start
+  
+  This will start the development server and open the application in the default web browser. You should see the login form with email and password fields. 
+  Enter the email and password as */
