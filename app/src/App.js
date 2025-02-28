@@ -1,56 +1,71 @@
 import { useState } from "react";
 import logo from "./logo/Adobe Express - file (1).png";
-import "./App.css"; 
+import "./App.css";
+import Home from "./Home"; // Import the new component
 
 function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email === "user@example.com" && password === "password") {
-      setMessage("Login successful!");
-    } else {
-      setMessage("Invalid email or password");
+
+    try {
+      const response = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage(data.message);
+        setIsLoggedIn(true);  // Set logged in state to true
+        setUserId(data.userId);  // Set user ID
+      } else {
+        setMessage(data.message);
+      }
+    } catch (error) {
+      setMessage("Server error");
     }
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <br />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <br />
-          <button type="submit">Login</button>
-        </form>
-        {message && <p>{message}</p>}
-      </header>
+    <div>
+      {isLoggedIn ? (
+        <Home userId={userId} />  // Pass userId to Home component
+      ) : (
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h2>Login</h2>
+            <form onSubmit={handleLogin}>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <br />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <br />
+              <button type="submit">Login</button>
+            </form>
+            {message && <p>{message}</p>}
+          </header>
+        </div>
+      )}
     </div>
   );
 }
 
 export default App;
-  
-/*  In the code above, we have created a simple login form with email and password fields. We have used the  useState  hook to create state variables for email, password, and message. The  handleLogin  function is called when the form is submitted. It checks if the email and password match the hardcoded values and sets the message accordingly. 
-  Now, let’s run the application and see the login form in action. 
-  Run the React Application 
-  To run the React application, execute the following command in the terminal: 
-  npm start
-  
-  This will start the development server and open the application in the default web browser. You should see the login form with email and password fields. 
-  Enter the email and password as */

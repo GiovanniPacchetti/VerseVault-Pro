@@ -1,8 +1,8 @@
 import sqlite3
 
 def connect_db():
-    try:
-        db = sqlite3.connect('libreria.db')
+    try: 
+        db = sqlite3.connect(database = "libreria.db")
         return db
     except sqlite3.Error as e:
         print(f"Error al conectar con la base de datos: {e}")

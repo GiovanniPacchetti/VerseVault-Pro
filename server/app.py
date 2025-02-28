@@ -17,7 +17,7 @@ app.config.update({
     ),
     'APISPEC_SWAGGER_URL': '/swagger.json',
     'APISPEC_SWAGGER_UI_URL': '/swagger-ui',
-    'PROPAGATE_EXCEPTIONS': True  # Añade esta línea
+    'PROPAGATE_EXCEPTIONS': False  # Añade esta línea
 })
 
 # Inicializa Flask-APISpec
@@ -46,7 +46,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 @app.before_request
 def log_request_info():
-    app.logger.debug('Headers: %s', request.headers)
-    app.logger.debug('Body: %s', request.get_data())
+    if not request.path.startswith('/swagger'):
+        app.logger.debug('Headers: %s', request.headers)
+        app.logger.debug('Body: %s', request.get_data())
 if __name__ == "__main__":
     app.run(debug=True)

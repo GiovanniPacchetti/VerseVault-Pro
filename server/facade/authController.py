@@ -4,6 +4,8 @@ from flask_apispec.views import MethodResource
 from marshmallow import Schema, fields, EXCLUDE
 from service.userService import login
 from marshmallow import ValidationError
+from flask_jwt_extended import create_access_token
+from datetime import timedelta
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -45,14 +47,13 @@ class LoginResource(MethodResource):
             
             # Usar la fachada para procesar el login
             response = login(email, password)
-            
-            # Formatear respuesta correctamente
-            if isinstance(response, dict):
-                return response, 200
-            elif isinstance(response, tuple) and len(response) > 1:
-                return response
+
+            # Usar la fachada para procesar el login
+            if isinstance(response, int) and response > 0:
+                token = create_access_token(identity=response, expires_delta=timedelta(hours=1))
+                return {"message": "Login exitoso", "token": token}, 200
             else:
-                return {"message": "Login procesado"}, 200
+                return {"error": "Credenciales incorrectas"}, 401
                 
         except ValidationError as err:
             print("Error de validación:", err.messages)
