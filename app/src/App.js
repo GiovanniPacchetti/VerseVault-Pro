@@ -38,6 +38,7 @@ function App() {
     setEmail("");  // Clear email field
     setPassword("");  // Clear password field
     setIsLoggedIn(false);  // Log out user
+    setMessage("");  // Clear any error messages
   };
 
   return (
