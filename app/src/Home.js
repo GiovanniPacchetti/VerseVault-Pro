@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import MyList from "./MyList";
 import SearchBook from "./SearchBook";
 
-function Home({ userId, setIsLoggedIn }) { // Recibe setIsLoggedIn
+function Home({ userId, setIsLoggedIn, handleLogout }) { // Recibe handleLogout
   const [userData, setUserData] = useState(null);
   const [view, setView] = useState("home");
 
@@ -17,10 +17,6 @@ function Home({ userId, setIsLoggedIn }) { // Recibe setIsLoggedIn
       fetchUserData();
     }
   }, [userId]);
-
-  const handleLogOut = () => {
-    setIsLoggedIn(false); // Cierra sesión y vuelve al login
-  };
 
   return (
     <div>
@@ -38,7 +34,7 @@ function Home({ userId, setIsLoggedIn }) { // Recibe setIsLoggedIn
           <div>
             <button onClick={() => setView("list")}>See My List</button>
             <button onClick={() => setView("searchBook")}>Search a Book</button>
-            <button onClick={handleLogOut}>Log Out</button> {/* Llamamos a handleLogOut */}
+            <button onClick={() => { handleLogout(); setView("home"); }}>Log Out</button> {/* Llamamos a handleLogout */}
           </div>
         </div>
       )}

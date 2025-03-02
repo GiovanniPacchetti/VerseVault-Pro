@@ -33,6 +33,10 @@ app.post("/login", (req, res) => {
       res.json({ message: "Login successful", userId: row.id_cl });
     });
 });
+
+app.post("/logout", (req, res) => {
+    res.json({ message: "Logout successful" });
+});
   
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);

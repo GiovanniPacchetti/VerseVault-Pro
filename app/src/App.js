@@ -34,10 +34,16 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    setEmail("");  // Clear email field
+    setPassword("");  // Clear password field
+    setIsLoggedIn(false);  // Log out user
+  };
+
   return (
     <div>
       {isLoggedIn ? (
-        <Home userId={userId} setIsLoggedIn={setIsLoggedIn} />  // Pasamos la función de logout
+        <Home userId={userId} setIsLoggedIn={setIsLoggedIn} handleLogout={handleLogout} />  // Pass handleLogout to Home
       ) : (
         <div className="App">
           <header className="App-header">
