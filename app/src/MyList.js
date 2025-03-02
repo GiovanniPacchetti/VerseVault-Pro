@@ -80,7 +80,7 @@ function MyList({ userId }) {
       const response = await fetch(`http://localhost:5000/addBook`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, tituloLibro: bookName, fecha_lec: new Date() }),
+        body: JSON.stringify({ userId, tituloLibro: bookName, fecha_lec: new Date().toISOString().split('T')[0] }),
       });
   
       const data = await response.json();
