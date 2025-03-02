@@ -15,13 +15,6 @@ const db = new sqlite3.Database("libreria.db", (err) => {
     console.error("Error opening database:", err.message);
   } else {
     console.log("Connected to SQLite database.");
-    db.run(
-      `CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE,
-        password TEXT
-      )`
-    );
   }
 });
 
@@ -41,8 +34,6 @@ app.post("/login", (req, res) => {
     });
 });
   
-
-
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });

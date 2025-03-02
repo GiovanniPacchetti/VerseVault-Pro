@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/Users/chivi/Desktop/uni/personal/VerseVault-Pro/C-project"
+    "cmake.sourceDirectory": "C:/Users/chivi/Desktop/uni/personal/VerseVault-Pro/C-project",
+    "cmake.ignoreCMakeListsMissing": true
 }

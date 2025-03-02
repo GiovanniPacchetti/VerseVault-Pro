@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import MyList from "./MyList"; // Import your MyList component
-import AddBook from "./AddBook"; // Import your AddBook component
+import MyList from "./MyList";
+import SearchBook from "./SearchBook";
 
-function Home({ userId }) {
+function Home({ userId, setIsLoggedIn }) { // Recibe setIsLoggedIn
   const [userData, setUserData] = useState(null);
-  const [view, setView] = useState("home"); // This will track the current view
+  const [view, setView] = useState("home");
 
   useEffect(() => {
-    // Example: Fetching additional user data after login
     const fetchUserData = async () => {
       const response = await fetch(`http://localhost:5000/user/${userId}`);
       const data = await response.json();
@@ -19,17 +18,8 @@ function Home({ userId }) {
     }
   }, [userId]);
 
-  // Handlers for button actions
-  const handleViewList = () => {
-    setView("list"); // Set the view to show the user's list
-  };
-
-  const handleAddBook = () => {
-    setView("addBook"); // Set the view to add a book
-  };
-
-  const handleGoBack = () => {
-    setView("home"); // Go back to the home view
+  const handleLogOut = () => {
+    setIsLoggedIn(false); // Cierra sesión y vuelve al login
   };
 
   return (
@@ -40,17 +30,15 @@ function Home({ userId }) {
           {userData ? (
             <div>
               <p>Email: {userData.email}</p>
-              <p>Member since: {userData.xº}</p>
-              {/* Display other user data */}
+              <p>Member since: {userData.dateJoined}</p>
             </div>
           ) : (
             <p>Loading your data...</p>
           )}
-
-          {/* Buttons */}
           <div>
-            <button onClick={handleViewList}>See My List</button>
-            <button onClick={handleAddBook}>Add a Book</button>
+            <button onClick={() => setView("list")}>See My List</button>
+            <button onClick={() => setView("searchBook")}>Search a Book</button>
+            <button onClick={handleLogOut}>Log Out</button> {/* Llamamos a handleLogOut */}
           </div>
         </div>
       )}
@@ -58,16 +46,16 @@ function Home({ userId }) {
       {view === "list" && (
         <div>
           <h3>Your Book List</h3>
-          <MyList userId={userId} /> {/* Render your MyList component */}
-          <button onClick={handleGoBack}>Go Back</button>
+          <MyList userId={userId} />
+          <button onClick={() => setView("home")}>Go Back</button>
         </div>
       )}
 
-      {view === "addBook" && (
+      {view === "searchBook" && (
         <div>
-          <h3>Add a Book</h3>
-          <AddBook userId={userId} /> {/* Render your AddBook component */}
-          <button onClick={handleGoBack}>Go Back</button>
+          <h3>Search a Book</h3>
+          <SearchBook userId={userId} />
+          <button onClick={() => setView("home")}>Go Back</button>
         </div>
       )}
     </div>

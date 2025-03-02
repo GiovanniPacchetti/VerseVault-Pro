@@ -37,7 +37,7 @@ function App() {
   return (
     <div>
       {isLoggedIn ? (
-        <Home userId={userId} />  // Pass userId to Home component
+        <Home userId={userId} setIsLoggedIn={setIsLoggedIn} />  // Pasamos la función de logout
       ) : (
         <div className="App">
           <header className="App-header">
