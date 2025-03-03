@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import MyList from "./MyList";
 import SearchBook from "./SearchBook";
 
-function Home({ userId, setIsLoggedIn, handleLogout }) { // Recibe handleLogout
+function Home({ userId, setIsLoggedIn, handleLogout }) {
   const [userData, setUserData] = useState(null);
   const [view, setView] = useState("home");
 
@@ -22,7 +22,7 @@ function Home({ userId, setIsLoggedIn, handleLogout }) { // Recibe handleLogout
     <div>
       {view === "home" && (
         <div>
-          <h2>Welcome, user {userId}!</h2>
+          <h2>Welcome, {userData ? userData.name : "Guest"}!</h2>
           {userData ? (
             <div>
               <p>Email: {userData.email}</p>
@@ -34,7 +34,7 @@ function Home({ userId, setIsLoggedIn, handleLogout }) { // Recibe handleLogout
           <div>
             <button onClick={() => setView("list")}>See My List</button>
             <button onClick={() => setView("searchBook")}>Search a Book</button>
-            <button onClick={() => { handleLogout(); setView("home"); }}>Log Out</button> {/* Llamamos a handleLogout */}
+            <button onClick={() => { handleLogout(); setView("home"); }}>Log Out</button>
           </div>
         </div>
       )}

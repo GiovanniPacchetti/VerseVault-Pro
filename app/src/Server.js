@@ -2,6 +2,9 @@ const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const fetch = require("node-fetch");
+const path = require("path");
 
 const app = express();
 const port = 5000;
@@ -37,7 +40,85 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
     res.json({ message: "Logout successful" });
 });
+
+const downloadBook = async (bookName, authorName) => {
+  try {
+      // Construir la URL de búsqueda en Gutendex
+      const query = `http://gutendex.com/books/?search=${encodeURIComponent(bookName)}%20${encodeURIComponent(authorName)}`;
+      const response = await fetch(query);
+      const data = await response.json();
+
+      if (!data.results || data.results.length === 0) {
+          throw new Error("No se encontró el libro en la API de Gutenberg.");
+      }
+
+      // Obtener el enlace del archivo de texto en formato UTF-8
+      const bookData = data.results[0];
+      const txtUrl = bookData.formats["text/plain; charset=us-ascii"];
+
+      if (!txtUrl) {
+          throw new Error("No se encontró un enlace válido para descargar el libro.");
+      }
+
+      // Descargar el contenido del libro
+      const bookResponse = await fetch(txtUrl);
+      const bookContent = await bookResponse.text();
+
+      // Crear la carpeta "libros" si no existe
+      const dirPath = path.join(__dirname, "libros");
+      if (!fs.existsSync(dirPath)) {
+          fs.mkdirSync(dirPath, { recursive: true });
+      }
+
+      // Guardar el archivo en la carpeta "libros"
+      const filePath = path.join(dirPath, `${bookData.title}.txt`);
+      fs.writeFileSync(filePath, bookContent, "utf8");
+
+      console.log(`Libro guardado en: ${filePath}`);
+      return { message: "Libro descargado con éxito", filePath };
+  } catch (error) {
+      console.error("Error al descargar el libro:", error.message);
+      throw error;
+  }
+};
+
+// **Nuevo endpoint para la descarga**
+app.post("/user/:userId/books/download", async (req, res) => {
+  const { bookName, authorName } = req.body;
+
+  if (!bookName || !authorName) {
+      return res.status(400).json({ message: "Se requiere el nombre del libro y el autor" });
+  }
+
+  try {
+      const result = await downloadBook(bookName, authorName);
+      res.json(result);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
   
+app.get("/user/:userId", (req, res) => {
+  const { userId } = req.params;
+
+  const sql = "SELECT nom_cl, email_cl, fecha_n_cl FROM Cliente WHERE id_cl = ?";
+  db.get(sql, [userId], (err, row) => {
+    if (err) {
+      return res.status(500).json({ message: "Database error", error: err.message });
+    }
+
+    if (!row) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      name: row.nom_cl, 
+      email: row.email_cl, 
+      dateJoined: row.fecha_n_cl
+    });
+  });
+});
+
 
 app.get("/user/:userId/books", (req, res) => {
   const { userId } = req.params;
@@ -89,6 +170,39 @@ app.get("/user/:userId/books", (req, res) => {
           return res.json(books);  // Devolver los libros con la información
         }
       });
+    });
+  });
+});
+
+app.delete("/user/:userId/books/delete", (req, res) => {
+  const { userId } = req.params;
+  const { bookName } = req.body;
+
+  // Obtener el ID del libro basado en el título
+  const sqlGetBookId = `SELECT id_libro FROM Libro WHERE titulo = ?`;
+  db.get(sqlGetBookId, [bookName], (err, row) => {
+    if (err) {
+      return res.status(500).json({ message: "Error al buscar el libro en la base de datos", error: err.message });
+    }
+
+    if (!row) {
+      return res.status(404).json({ message: "No se encontró un libro con ese título" });
+    }
+
+    const bookId = row.id_libro;
+
+    // Eliminar el libro de la lista de progreso del usuario
+    const sqlDeleteBook = `DELETE FROM Progreso WHERE id_cl = ? AND id_libro = ?`;
+    db.run(sqlDeleteBook, [userId, bookId], function (err) {
+      if (err) {
+        return res.status(500).json({ message: "Error al eliminar el libro de la lista", error: err.message });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ message: "El libro no estaba en la lista del usuario" });
+      }
+
+      res.json({ message: "Libro eliminado correctamente" });
     });
   });
 });
@@ -148,6 +262,8 @@ function guardarProgreso(id_cliente, id_libro, fecha_lec, pag_actual) {
     });
   });
 }
+
+
 
 
 
