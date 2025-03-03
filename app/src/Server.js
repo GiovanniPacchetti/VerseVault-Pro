@@ -207,6 +207,49 @@ app.delete("/user/:userId/books/delete", (req, res) => {
   });
 });
 
+// Endpoint para obtener el contenido de un libro
+app.get("/user/:userId/books/content", (req, res) => {
+  const { bookName } = req.query;
+
+  // Construir la ruta del archivo
+  const filePath = path.join(__dirname, "libros", `${bookName}.txt`);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ message: "Libro no encontrado." });
+  }
+
+  const content = fs.readFileSync(filePath, "utf8");
+  res.json({ content });
+});
+
+// Endpoint para guardar el progreso del libro
+app.post("/user/:userId/books/progress", (req, res) => {
+  const { userId, bookName, page } = req.body;
+
+  // Consultar si el libro existe
+  const sqlGetBookId = `SELECT id_libro FROM Libro WHERE titulo = ?`;
+  db.get(sqlGetBookId, [bookName], (err, row) => {
+    if (err) {
+      return res.status(500).json({ message: "Error al buscar el libro en la base de datos", error: err.message });
+    }
+
+    if (!row) {
+      return res.status(404).json({ message: "Libro no encontrado." });
+    }
+
+    const bookId = row.id_libro;
+
+    // Actualizar el progreso del libro en la tabla Progreso
+    const sqlUpdateProgress = `UPDATE Progreso SET pag_actual = ? WHERE id_cl = ? AND id_libro = ?`;
+    db.run(sqlUpdateProgress, [page, userId, bookId], function (err) {
+      if (err) {
+        return res.status(500).json({ message: "Error al actualizar el progreso", error: err.message });
+      }
+
+      res.json({ message: "Progreso actualizado correctamente" });
+    });
+  });
+});
 
 app.post("/addBook", (req, res) => {
   const { userId, tituloLibro, fecha_lec } = req.body;

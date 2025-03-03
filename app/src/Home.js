@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import MyList from "./MyList";
 import SearchBook from "./SearchBook";
+import ReadBook from "./ReadBook"; // Importar ReadBook
 
 function Home({ userId, setIsLoggedIn, handleLogout }) {
   const [userData, setUserData] = useState(null);
   const [view, setView] = useState("home");
+  const [currentBook, setCurrentBook] = useState(null); // Estado para el libro actual
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -42,7 +44,7 @@ function Home({ userId, setIsLoggedIn, handleLogout }) {
       {view === "list" && (
         <div>
           <h3>Your Book List</h3>
-          <MyList userId={userId} />
+          <MyList userId={userId} setView={setView} setCurrentBook={setCurrentBook} />
           <button onClick={() => setView("home")}>Go Back</button>
         </div>
       )}
@@ -53,6 +55,15 @@ function Home({ userId, setIsLoggedIn, handleLogout }) {
           <SearchBook userId={userId} />
           <button onClick={() => setView("home")}>Go Back</button>
         </div>
+      )}
+
+      {view === "readBook" && currentBook && (
+        <ReadBook
+          userId={userId}
+          bookName={currentBook.bookName}
+          currentPage={currentBook.currentPage}
+          setView={setView}
+        />
       )}
     </div>
   );

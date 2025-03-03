@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function MyList({ userId }) {
+function MyList({ userId, setView, setCurrentBook }) {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -92,25 +92,9 @@ function MyList({ userId }) {
     }
   };
 
-  const handleReadBook = async (bookName) => {
-    try {
-      const response = await fetch(`http://localhost:5000/user/${userId}/books/read`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookName }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setBooks((prevBooks) =>
-          prevBooks.map((book) => (book.titulo === bookName ? { ...book, leido: true } : book))
-        );
-      } else {
-        setError(data.message);
-      }
-    } catch (err) {
-      setError("Error al marcar el libro como leído.");
-    }
+  const handleReadBook = (bookName, currentPage) => {
+    setCurrentBook({ bookName, currentPage });
+    setView("readBook");
   };
 
   // Mostrar input según la acción
@@ -136,7 +120,7 @@ function MyList({ userId }) {
     } else if (actionType === "delete") {
       handleDeleteBook(bookName);
     } else if (actionType === "read") {
-      handleReadBook(bookName);
+      handleReadBook(bookName, 0);  // Inicialmente, comenzamos desde la página 0
     } else if (actionType === "download") {
       handleDownloadBook(bookName, authorName);
     }
@@ -158,13 +142,13 @@ function MyList({ userId }) {
             <br />
             Página actual: {book.pagina_actual}
             <br />
+            <button onClick={() => handleReadBook(book.titulo, book.pagina_actual)}>Leer</button>
           </li>
         ))}
       </ul>
       <div>
         <button onClick={() => handleButtonClick("add")}>Agregar libro a mi Lista</button>
         <button onClick={() => handleButtonClick("delete")}>Eliminar libro de mi Lista</button>
-        <button onClick={() => handleButtonClick("read")}>Leer libro</button>
         <button onClick={() => handleButtonClick("download")}>Descargar libro</button>
       </div>
       {showInput && (
@@ -182,7 +166,7 @@ function MyList({ userId }) {
               onChange={(e) => setAuthorName(e.target.value)}
               placeholder="Nombre del autor"
             />
-          )}
+          )} 
           <button onClick={handleAction}>Confirmar</button>
         </div>
       )}
