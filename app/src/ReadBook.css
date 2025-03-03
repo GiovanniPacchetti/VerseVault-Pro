@@ -74,3 +74,36 @@
   .navigation-buttons button:hover {
     background-color: #0056b3;
   }
+
+  .book-content {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .page-content {
+    position: relative;
+    width: 45%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    overflow: hidden;
+  }
+  
+  .page-number {
+    text-align: right;
+    margin-top: 10px;
+  }
+  
+  .bookmark-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+  }
+  
+  .navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
