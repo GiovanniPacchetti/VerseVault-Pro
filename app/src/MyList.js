@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import loadingGif from './assets/logo/loading.gif'; // Importar el GIF de carga
 
 function MyList({ userId, setView, setCurrentBook }) {
   const [books, setBooks] = useState([]);
@@ -7,6 +8,7 @@ function MyList({ userId, setView, setCurrentBook }) {
   const [bookName, setBookName] = useState("");
   const [showInput, setShowInput] = useState(false);
   const [actionType, setActionType] = useState("");
+  const [downloadingBook, setDownloadingBook] = useState(null); // Estado para el libro que se está descargando
 
   // Obtener libros del servidor
   const fetchBooks = async () => {
@@ -44,6 +46,7 @@ function MyList({ userId, setView, setCurrentBook }) {
 
   // Función para descargar libros
   const handleDownloadBook = async (bookName, authorName) => {
+    setDownloadingBook(bookName); // Mostrar el GIF de carga
     try {
       const response = await fetch(`http://localhost:5000/user/${userId}/books/download`, {
         method: "POST",
@@ -53,7 +56,7 @@ function MyList({ userId, setView, setCurrentBook }) {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Descarga completada. Revisa la carpeta 'libros'.");
+        //alert("Descarga completada. Revisa la carpeta 'libros'.");
         setBooks((prevBooks) =>
           prevBooks.map((book) =>
             book.titulo === bookName ? { ...book, descargado: true } : book
@@ -64,6 +67,8 @@ function MyList({ userId, setView, setCurrentBook }) {
       }
     } catch (err) {
       setError("Error al descargar el libro.");
+    } finally {
+      setDownloadingBook(null); // Ocultar el GIF de carga
     }
   };
 
@@ -151,7 +156,10 @@ function MyList({ userId, setView, setCurrentBook }) {
             {book.descargado ? (
               <button onClick={() => handleReadBook(book.titulo, book.pagina_actual)}>Leer</button>
             ) : (
-              <button onClick={() => handleDownloadBook(book.titulo, book.autor)}>Descargar</button>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <button onClick={() => handleDownloadBook(book.titulo, book.autor)}>Descargar</button>
+                {downloadingBook === book.titulo && <img src={loadingGif} alt="Loading..." style={{ width: '20px', marginLeft: '10px' }} />}
+              </div>
             )}
           </li>
         ))}
