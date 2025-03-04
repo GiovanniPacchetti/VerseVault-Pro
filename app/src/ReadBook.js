@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import './ReadBook.css'; // Importar el archivo CSS
-import bookmarkIcon from './logo/bookMark.png'; // Importar el icono del marcador
+import bookmarkIcon from './assets/logo/bookMark.png'; // Importar el icono del marcador
 
 function ReadBook({ userId, bookName, currentPage, setView }) {
   const [bookContent, setBookContent] = useState("");

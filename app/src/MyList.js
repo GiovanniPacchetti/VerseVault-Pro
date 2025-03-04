@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import loadingGif from './assets/logo/loading.gif'; // Importar el GIF de carga
+import './MyList.css'; // Importar el archivo CSS
 
 function MyList({ userId, setView, setCurrentBook }) {
   const [books, setBooks] = useState([]);
@@ -41,7 +42,7 @@ function MyList({ userId, setView, setCurrentBook }) {
   }, [userId]);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div className="error">Error: {error}</div>;
   if (books.length === 0) return <div>No hay libros en tu lista.</div>;
 
   // Función para descargar libros
@@ -142,22 +143,24 @@ function MyList({ userId, setView, setCurrentBook }) {
   };
 
   return (
-    <div>
-      <h2>Your Book List</h2>
+    <div className="container">
+      <h2 className="mylist-title">Your Book List</h2>
       <ul>
         {books.map((book) => (
           <li key={book.id_libro}>
-            <strong>{book.titulo}</strong> - {book.autor}
+            <div className="book-info">
+              <strong>{book.titulo}</strong><span>{book.autor}</span>
+            </div>
             <br />
             Fecha de lectura: {book.fecha_lectura}
             <br />
             Página actual: {book.pagina_actual}
             <br />
             {book.descargado ? (
-              <button onClick={() => handleReadBook(book.titulo, book.pagina_actual)}>Leer</button>
+              <button className="mylist-button" onClick={() => handleReadBook(book.titulo, book.pagina_actual)}>Leer</button>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <button onClick={() => handleDownloadBook(book.titulo, book.autor)}>Descargar</button>
+                <button className="mylist-button" onClick={() => handleDownloadBook(book.titulo, book.autor)}>Descargar</button>
                 {downloadingBook === book.titulo && <img src={loadingGif} alt="Loading..." style={{ width: '20px', marginLeft: '10px' }} />}
               </div>
             )}
@@ -165,8 +168,8 @@ function MyList({ userId, setView, setCurrentBook }) {
         ))}
       </ul>
       <div>
-        <button onClick={() => handleButtonClick("add")}>Agregar libro a mi Lista</button>
-        <button onClick={() => handleButtonClick("delete")}>Eliminar libro de mi Lista</button>
+        <button className="mylist-action-button" onClick={() => handleButtonClick("add")}>Agregar libro a mi Lista</button>
+        <button className="mylist-action-button" onClick={() => handleButtonClick("delete")}>Eliminar libro de mi Lista</button>
       </div>
       {showInput && (
         <div>
@@ -176,7 +179,7 @@ function MyList({ userId, setView, setCurrentBook }) {
             onChange={(e) => setBookName(e.target.value)}
             placeholder="Nombre del libro"
           />
-          <button onClick={handleAction}>Confirmar</button>
+          <button className="mylist-action-button" onClick={handleAction}>Confirmar</button>
         </div>
       )}
     </div>

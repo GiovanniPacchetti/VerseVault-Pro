@@ -1,5 +1,5 @@
 import { useState } from "react";
-import logo from "./logo/Adobe Express - file (1).png";
+import logo from "./assets/logo/Adobe Express - file (1).png";
 import "./App.css";
 import Home from "./Home"; // Import the new component
 

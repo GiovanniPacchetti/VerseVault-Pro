@@ -1,0 +1,94 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mylist-title {
+    text-align: center;
+    color: #333;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    background-color: #fff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6; /* Agregar interlineado */
+  }
+  
+  li strong {
+    font-size: 1.2em;
+    color: #333;
+  }
+  
+  li .book-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  li .mylist-button {
+    background-color: #ff5722; /* Cambiar a un color distinto al verde */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  li .mylist-button:hover {
+    background-color: #e64a19;
+  }
+  
+  li div {
+    display: flex;
+    align-items: center;
+  }
+  
+  li img {
+    width: 20px;
+    margin-left: 10px;
+  }
+  
+  input[type="text"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .mylist-action-button {
+    background-color: #ff5722; /* Cambiar a un color distinto al verde */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 10px;
+  }
+  
+  .mylist-action-button:hover {
+    background-color: #e64a19;
+  }
+  
+  .error {
+    color: red;
+    text-align: center;
+    margin: 10px 0;
+  }
