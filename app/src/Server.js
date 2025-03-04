@@ -119,15 +119,16 @@ app.get("/user/:userId", (req, res) => {
   });
 });
 
-
 app.get("/user/:userId/books", (req, res) => {
   const { userId } = req.params;
   let books = [];
 
   // Consulta para obtener los libros del cliente
   const sql = `
-    SELECT p.id_libro, p.fecha_lec, p.pag_actual
+    SELECT p.id_libro, p.fecha_lec, p.pag_actual, l.titulo, a.nom_autor
     FROM Progreso p
+    JOIN Libro l ON p.id_libro = l.id_libro
+    JOIN Autor a ON l.id_autor = a.id_autor
     WHERE p.id_cl = ?;
   `;
   db.all(sql, [userId], (err, rows) => {
@@ -139,38 +140,15 @@ app.get("/user/:userId/books", (req, res) => {
       return res.status(404).json({ message: "No se encontraron libros para este usuario." });
     }
 
-    // Para cada libro, obtenemos su título
-    let queryCount = 0;
-    rows.forEach((row) => {
-      const { id_libro, fecha_lec, pag_actual } = row;
+    books = rows.map(row => ({
+      id_libro: row.id_libro,
+      titulo: row.titulo,
+      autor: row.nom_autor,
+      fecha_lectura: row.fecha_lec,
+      pagina_actual: row.pag_actual
+    }));
 
-      // Consultamos el título del libro
-      const titleSql = "SELECT titulo FROM Libro WHERE id_libro = ?";
-      db.get(titleSql, [id_libro], (err, titleRow) => {
-        if (err) {
-          return res.status(500).json({ message: "Error al obtener el título del libro", error: err.message });
-        }
-
-        if (titleRow) {
-          books.push({
-            id_libro,
-            titulo: titleRow.titulo,
-            fecha_lectura: fecha_lec,
-            pagina_actual: pag_actual
-          });
-        }
-
-        queryCount++;
-
-        // Si todos los títulos han sido procesados, devolver la respuesta
-        if (queryCount === rows.length) {
-          if (books.length === 0) {
-            return res.status(404).json({ message: "No se encontraron libros en tu lista." });
-          }
-          return res.json(books);  // Devolver los libros con la información
-        }
-      });
-    });
+    res.json(books);
   });
 });
 
@@ -290,7 +268,6 @@ app.post("/addBook", (req, res) => {
   });
 });
 
-
 function guardarProgreso(id_cliente, id_libro, fecha_lec, pag_actual) {
   return new Promise((resolve, reject) => {
     // Insertar el progreso del libro en la tabla Progreso
@@ -305,10 +282,6 @@ function guardarProgreso(id_cliente, id_libro, fecha_lec, pag_actual) {
     });
   });
 }
-
-
-
-
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);

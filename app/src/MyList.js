@@ -136,7 +136,7 @@ function MyList({ userId, setView, setCurrentBook }) {
       <ul>
         {books.map((book) => (
           <li key={book.id_libro}>
-            <strong>{book.titulo}</strong>
+            <strong>{book.titulo}</strong> - {book.autor}
             <br />
             Fecha de lectura: {book.fecha_lectura}
             <br />
