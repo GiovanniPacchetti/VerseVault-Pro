@@ -5,7 +5,6 @@ function MyList({ userId, setView, setCurrentBook }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bookName, setBookName] = useState("");
-  const [authorName, setAuthorName] = useState(""); // Nuevo estado para el autor
   const [showInput, setShowInput] = useState(false);
   const [actionType, setActionType] = useState("");
 
@@ -17,7 +16,17 @@ function MyList({ userId, setView, setCurrentBook }) {
         throw new Error(response.status === 404 ? "No se encontraron libros para este usuario." : "Error al obtener los libros.");
       }
       const data = await response.json();
-      setBooks(data);
+
+      // Verificar si los libros están descargados
+      const booksWithDownloadStatus = await Promise.all(
+        data.map(async (book) => {
+          const downloadResponse = await fetch(`http://localhost:5000/user/${userId}/books/${book.id_libro}/isDownloaded`);
+          const downloadData = await downloadResponse.json();
+          return { ...book, descargado: downloadData.isDownloaded };
+        })
+      );
+
+      setBooks(booksWithDownloadStatus);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -45,6 +54,11 @@ function MyList({ userId, setView, setCurrentBook }) {
       const data = await response.json();
       if (response.ok) {
         alert("Descarga completada. Revisa la carpeta 'libros'.");
+        setBooks((prevBooks) =>
+          prevBooks.map((book) =>
+            book.titulo === bookName ? { ...book, descargado: true } : book
+          )
+        );
       } else {
         setError(data.message);
       }
@@ -110,24 +124,16 @@ function MyList({ userId, setView, setCurrentBook }) {
       return;
     }
 
-    if (actionType === "download" && !authorName) {
-      setError("Por favor, ingresa el nombre del autor.");
-      return;
-    }
-
     if (actionType === "add") {
       handleAddBook(bookName);
     } else if (actionType === "delete") {
       handleDeleteBook(bookName);
     } else if (actionType === "read") {
       handleReadBook(bookName, 0);  // Inicialmente, comenzamos desde la página 0
-    } else if (actionType === "download") {
-      handleDownloadBook(bookName, authorName);
     }
 
     setShowInput(false);
     setBookName("");
-    setAuthorName("");
   };
 
   return (
@@ -142,14 +148,17 @@ function MyList({ userId, setView, setCurrentBook }) {
             <br />
             Página actual: {book.pagina_actual}
             <br />
-            <button onClick={() => handleReadBook(book.titulo, book.pagina_actual)}>Leer</button>
+            {book.descargado ? (
+              <button onClick={() => handleReadBook(book.titulo, book.pagina_actual)}>Leer</button>
+            ) : (
+              <button onClick={() => handleDownloadBook(book.titulo, book.autor)}>Descargar</button>
+            )}
           </li>
         ))}
       </ul>
       <div>
         <button onClick={() => handleButtonClick("add")}>Agregar libro a mi Lista</button>
         <button onClick={() => handleButtonClick("delete")}>Eliminar libro de mi Lista</button>
-        <button onClick={() => handleButtonClick("download")}>Descargar libro</button>
       </div>
       {showInput && (
         <div>
@@ -159,14 +168,6 @@ function MyList({ userId, setView, setCurrentBook }) {
             onChange={(e) => setBookName(e.target.value)}
             placeholder="Nombre del libro"
           />
-          {actionType === "download" && (
-            <input
-              type="text"
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
-              placeholder="Nombre del autor"
-            />
-          )} 
           <button onClick={handleAction}>Confirmar</button>
         </div>
       )}

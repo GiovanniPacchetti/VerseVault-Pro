@@ -23,62 +23,62 @@ const db = new sqlite3.Database("libreria.db", (err) => {
 
 // Endpoint para autenticación
 app.post("/login", (req, res) => {
-    const { email, password } = req.body;
-  
-    const sql = "SELECT id_cl FROM Cliente WHERE email_cl = ? AND pass_cl = ?";
-    db.get(sql, [email, password], (err, row) => {
-      if (err) {
-        return res.status(500).json({ message: "Server error" });
-      }
-      if (!row) {
-        return res.status(401).json({ message: "Invalid email or password" });
-      }
-      res.json({ message: "Login successful", userId: row.id_cl });
-    });
+  const { email, password } = req.body;
+
+  const sql = "SELECT id_cl FROM Cliente WHERE email_cl = ? AND pass_cl = ?";
+  db.get(sql, [email, password], (err, row) => {
+    if (err) {
+      return res.status(500).json({ message: "Server error" });
+    }
+    if (!row) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+    res.json({ message: "Login successful", userId: row.id_cl });
+  });
 });
 
 app.post("/logout", (req, res) => {
-    res.json({ message: "Logout successful" });
+  res.json({ message: "Logout successful" });
 });
 
 const downloadBook = async (bookName, authorName) => {
   try {
-      // Construir la URL de búsqueda en Gutendex
-      const query = `http://gutendex.com/books/?search=${encodeURIComponent(bookName)}%20${encodeURIComponent(authorName)}`;
-      const response = await fetch(query);
-      const data = await response.json();
+    // Construir la URL de búsqueda en Gutendex
+    const query = `http://gutendex.com/books/?search=${encodeURIComponent(bookName)}%20${encodeURIComponent(authorName)}`;
+    const response = await fetch(query);
+    const data = await response.json();
 
-      if (!data.results || data.results.length === 0) {
-          throw new Error("No se encontró el libro en la API de Gutenberg.");
-      }
+    if (!data.results || data.results.length === 0) {
+      throw new Error("No se encontró el libro en la API de Gutenberg.");
+    }
 
-      // Obtener el enlace del archivo de texto en formato UTF-8
-      const bookData = data.results[0];
-      const txtUrl = bookData.formats["text/plain; charset=us-ascii"];
+    // Obtener el enlace del archivo de texto en formato UTF-8
+    const bookData = data.results[0];
+    const txtUrl = bookData.formats["text/plain; charset=us-ascii"];
 
-      if (!txtUrl) {
-          throw new Error("No se encontró un enlace válido para descargar el libro.");
-      }
+    if (!txtUrl) {
+      throw new Error("No se encontró un enlace válido para descargar el libro.");
+    }
 
-      // Descargar el contenido del libro
-      const bookResponse = await fetch(txtUrl);
-      const bookContent = await bookResponse.text();
+    // Descargar el contenido del libro
+    const bookResponse = await fetch(txtUrl);
+    const bookContent = await bookResponse.text();
 
-      // Crear la carpeta "libros" si no existe
-      const dirPath = path.join(__dirname, "libros");
-      if (!fs.existsSync(dirPath)) {
-          fs.mkdirSync(dirPath, { recursive: true });
-      }
+    // Crear la carpeta "libros" si no existe
+    const dirPath = path.join(__dirname, "libros");
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
 
-      // Guardar el archivo en la carpeta "libros"
-      const filePath = path.join(dirPath, `${bookData.title}.txt`);
-      fs.writeFileSync(filePath, bookContent, "utf8");
+    // Guardar el archivo en la carpeta "libros"
+    const filePath = path.join(dirPath, `${bookData.title}.txt`);
+    fs.writeFileSync(filePath, bookContent, "utf8");
 
-      console.log(`Libro guardado en: ${filePath}`);
-      return { message: "Libro descargado con éxito", filePath };
+    console.log(`Libro guardado en: ${filePath}`);
+    return { message: "Libro descargado con éxito", filePath };
   } catch (error) {
-      console.error("Error al descargar el libro:", error.message);
-      throw error;
+    console.error("Error al descargar el libro:", error.message);
+    throw error;
   }
 };
 
@@ -87,17 +87,43 @@ app.post("/user/:userId/books/download", async (req, res) => {
   const { bookName, authorName } = req.body;
 
   if (!bookName || !authorName) {
-      return res.status(400).json({ message: "Se requiere el nombre del libro y el autor" });
+    return res.status(400).json({ message: "Se requiere el nombre del libro y el autor" });
   }
 
   try {
-      const result = await downloadBook(bookName, authorName);
-      res.json(result);
+    const result = await downloadBook(bookName, authorName);
+    res.json(result);
   } catch (error) {
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
-  
+
+// **Nuevo endpoint para verificar si un libro está descargado**
+app.get("/user/:userId/books/:bookId/isDownloaded", (req, res) => {
+  const { bookId } = req.params;
+
+  // Obtener el título del libro basado en el ID
+  const sqlGetBookTitle = `SELECT titulo FROM Libro WHERE id_libro = ?`;
+  db.get(sqlGetBookTitle, [bookId], (err, row) => {
+    if (err) {
+      return res.status(500).json({ message: "Error al buscar el libro en la base de datos", error: err.message });
+    }
+
+    if (!row) {
+      return res.status(404).json({ message: "No se encontró un libro con ese ID" });
+    }
+
+    const bookTitle = row.titulo;
+    const filePath = path.join(__dirname, "libros", `${bookTitle}.txt`);
+
+    if (fs.existsSync(filePath)) {
+      res.json({ isDownloaded: true });
+    } else {
+      res.json({ isDownloaded: false });
+    }
+  });
+});
+
 app.get("/user/:userId", (req, res) => {
   const { userId } = req.params;
 
@@ -112,8 +138,8 @@ app.get("/user/:userId", (req, res) => {
     }
 
     res.json({
-      name: row.nom_cl, 
-      email: row.email_cl, 
+      name: row.nom_cl,
+      email: row.email_cl,
       dateJoined: row.fecha_n_cl
     });
   });
@@ -260,7 +286,6 @@ app.post("/addBook", (req, res) => {
             pagina_actual: 0
           }
         });
-        
       })
       .catch((err) => {
         res.status(500).json({ message: "Error al guardar el progreso del libro", error: err.message });
