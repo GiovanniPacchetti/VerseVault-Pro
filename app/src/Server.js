@@ -44,7 +44,12 @@ app.post("/logout", (req, res) => {
 const downloadBook = async (bookName, authorName) => {
   try {
     // Construir la URL de búsqueda en Gutendex
-    const query = `http://gutendex.com/books/?search=${encodeURIComponent(bookName)}%20${encodeURIComponent(authorName)}`;
+    let query;
+    if (authorName.toLowerCase() === "anonimo/desconocido") {
+      query = `http://gutendex.com/books/?search=${encodeURIComponent(bookName)}`;
+    } else {
+      query = `http://gutendex.com/books/?search=${encodeURIComponent(bookName)}%20${encodeURIComponent(authorName)}`;
+    }
     const response = await fetch(query);
     const data = await response.json();
 
@@ -86,8 +91,8 @@ const downloadBook = async (bookName, authorName) => {
 app.post("/user/:userId/books/download", async (req, res) => {
   const { bookName, authorName } = req.body;
 
-  if (!bookName || !authorName) {
-    return res.status(400).json({ message: "Se requiere el nombre del libro y el autor" });
+  if (!bookName) {
+    return res.status(400).json({ message: "Se requiere el nombre del libro" });
   }
 
   try {
