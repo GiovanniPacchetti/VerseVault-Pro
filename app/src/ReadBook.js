@@ -16,7 +16,7 @@ function ReadBook({ userId, bookName, currentPage, setView }) {
   // Cargar el libro desde el servidor
   const fetchBook = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/user/${userId}/books/content?bookName=${bookName}`);
+      const response = await fetch(`https://versevault-pro.onrender.com/user/${userId}/books/content?bookName=${bookName}`);
       const data = await response.json();
       setBookContent(data.content);
       // Si hay un marcador, abrir en la página del marcador
@@ -79,7 +79,7 @@ function ReadBook({ userId, bookName, currentPage, setView }) {
   const handleCloseBook = async () => {
     try {
       const pageToSave = bookmarkPage !== null ? bookmarkPage : currentPageState;
-      await fetch(`http://localhost:5000/user/${userId}/books/progress`, {
+      await fetch(`https://versevault-pro.onrender.com/user/${userId}/books/progress`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, bookName, page: pageToSave }),
@@ -99,7 +99,7 @@ function ReadBook({ userId, bookName, currentPage, setView }) {
       setBookmarkPage(page);
       setAddingBookmark(false);
       try {
-        await fetch(`http://localhost:5000/user/${userId}/books/bookmark`, {
+        await fetch(`https://versevault-pro.onrender.com/user/${userId}/books/bookmark`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, bookName, page }),
