@@ -14,7 +14,7 @@ function MyList({ userId, setView, setCurrentBook }) {
   // Obtener libros del servidor
   const fetchBooks = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/user/${userId}/books`);
+      const response = await fetch(`https://versevault-pro.onrender.com/user/${userId}/books`);
       if (!response.ok) {
         throw new Error(response.status === 404 ? "No se encontraron libros para este usuario." : "Error al obtener los libros.");
       }
@@ -23,7 +23,7 @@ function MyList({ userId, setView, setCurrentBook }) {
       // Verificar si los libros están descargados
       const booksWithDownloadStatus = await Promise.all(
         data.map(async (book) => {
-          const downloadResponse = await fetch(`http://localhost:5000/user/${userId}/books/${book.id_libro}/isDownloaded`);
+          const downloadResponse = await fetch(`https://versevault-pro.onrender.com/user/${userId}/books/${book.id_libro}/isDownloaded`);
           const downloadData = await downloadResponse.json();
           return { ...book, descargado: downloadData.isDownloaded };
         })
