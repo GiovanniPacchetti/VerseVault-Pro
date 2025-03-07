@@ -1,109 +1,279 @@
-.read-book-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    font-family: 'Georgia', serif;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .book-title {
-    margin: 0; /* Eliminar margen */
-    padding: 10px 0; /* Reducir padding */
-    font-size: 24px; /* Ajustar tamaño de fuente */
-    font-weight: bold; /* Hacer el título en negrita */
-    text-align: center; /* Centrar el título */
-  }
-  
-  .book-content {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: 450px; /* Ajusta la altura según sea necesario */
-    overflow: hidden;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    margin: 10px 0; /* Reducir margen arriba y abajo */
-    padding: 10px; /* Añadir padding para un mejor espaciado */
-    border: 1px solid #ccc; /* Añadir borde para mejor visualización */
-    background-color: #fff;
-    box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
-  }
-  
-  .page-content {
-    width: 48%; /* Ajustar el ancho de cada página */
-    height: 100%;
-    overflow: hidden;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    padding: 10px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    background-color: #fff;
-    position: relative; /* Para posicionar el número de página */
-  }
-  
-  .page-number {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    font-size: 14px;
-    color: #555;
-  }
-  
-  .navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  .navigation-buttons button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .navigation-buttons button:hover {
-    background-color: #0056b3;
-  }
+/* ReadBook.css - Berserk Inspired Theme */
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturCook&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap');
 
-  .book-content {
-    display: flex;
-    justify-content: space-between;
+.readbook-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  min-height: 80vh;
+}
+
+.tome-name {
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px rgba(153, 0, 0, 0.5);
+}
+
+.tome-display {
+  display: flex;
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: 500px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  margin-bottom: 2rem;
+}
+
+.tome-spine {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 100%;
+  background-color: #2a0a0a;
+  border-left: 1px solid #444;
+  border-right: 1px solid #444;
+  z-index: 1;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) inset;
+}
+
+.tome-page {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  padding: 40px 40px 60px;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: default;
+  transition: all 0.3s ease;
+}
+
+.tome-page.adding-bookmark {
+  cursor: pointer;
+}
+
+.left-page {
+  background-color: #1c1c1c;
+  border-radius: 8px 0 0 8px;
+  border-top: 1px solid #333;
+  border-left: 1px solid #333;
+  border-bottom: 1px solid #333;
+  background-image: 
+    linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0) 20%),
+    linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0) 20%);
+}
+
+.right-page {
+  background-color: #1c1c1c;
+  border-radius: 0 8px 8px 0;
+  border-top: 1px solid #333;
+  border-right: 1px solid #333;
+  border-bottom: 1px solid #333;
+  background-image: 
+    linear-gradient(to left, rgba(0,0,0,0.1), rgba(0,0,0,0) 20%),
+    linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0) 20%);
+}
+
+.page-content {
+  height: 100%;
+  overflow: hidden;
+  color: #d0d0d0;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  letter-spacing: 0.03rem;
+}
+
+.page-content pre {
+  font-family: 'IM Fell English', serif;
+  white-space: pre-wrap;
+  margin: 0;
+  height: 100%;
+}
+
+.page-number {
+  position: absolute;
+  bottom: 20px;
+  font-family: 'IM Fell English', serif;
+  font-size: 1rem;
+  color: #888;
+}
+
+.left-page .page-number {
+  left: 40px;
+}
+
+.right-page .page-number {
+  right: 40px;
+}
+
+.bookmark-indicator {
+  position: absolute;
+  top: 0;
+  width: 30px;
+  height: 60px;
+  background-color: rgba(153, 0, 0, 0.7);
+  z-index: 5;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.bookmark-indicator.left {
+  right: 20px;
+}
+
+.bookmark-indicator.right {
+  left: 20px;
+}
+
+.bookmark-prompt {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: rgba(153, 0, 0, 0.2);
+  border-left: 3px solid rgba(153, 0, 0, 0.7);
+  color: #d4d4d4;
+  font-style: italic;
+}
+
+.tome-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.nav-button {
+  background-color: rgba(30, 30, 30, 0.8);
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 0.8rem 1.2rem;
+  font-family: 'UnifrakturCook', serif;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: rgba(153, 0, 0, 0.6);
+  border-color: #700;
+  box-shadow: 0 0 10px rgba(153, 0, 0, 0.3);
+}
+
+.nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgba(30, 30, 30, 0.5);
+  border-color: #333;
+  box-shadow: none;
+}
+
+.previous-button:hover {
+  background-color: rgba(100, 0, 0, 0.6);
+}
+
+.next-button:hover {
+  background-color: rgba(100, 0, 0, 0.6);
+}
+
+.bookmark-button:hover {
+  background-color: rgba(120, 0, 0, 0.6);
+}
+
+.close-button:hover {
+  background-color: rgba(153, 0, 0, 0.6);
+}
+
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.loading-symbol {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(153, 0, 0, 0.3);
+  border-top: 3px solid rgba(153, 0, 0, 0.8);
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background-color: rgba(153, 0, 0, 0.2);
+  color: #f88;
+  padding: 1rem;
+  border-left: 3px solid #900;
+  margin: 1rem 0;
+  width: 80%;
+  max-width: 800px;
+  text-align: center;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .tome-display {
+    flex-direction: column;
+    height: auto;
+    max-height: 600px;
   }
   
-  .page-content {
-    position: relative;
-    width: 45%;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px;
-    overflow: hidden;
+  .tome-spine {
+    display: none;
   }
   
-  .page-number {
-    text-align: right;
-    margin-top: 10px;
+  .tome-page {
+    width: 100%;
+    height: 50%;
+    padding: 20px 20px 40px;
   }
   
-  .bookmark-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
+  .left-page {
+    border-radius: 8px 8px 0 0;
+    border-right: 1px solid #333;
+    border-bottom: none;
   }
   
-  .navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+  .right-page {
+    border-radius: 0 0 8px 8px;
+    border-left: 1px solid #333;
   }
+  
+  .left-page .page-number,
+  .right-page .page-number {
+    bottom: 10px;
+  }
+  
+  .left-page .page-number {
+    left: 20px;
+  }
+  
+  .right-page .page-number {
+    right: 20px;
+  }
+  
+  .bookmark-indicator {
+    height: 40px;
+  }
+  
+  .tome-navigation {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .nav-button {
+    width: 100%;
+  }
+}
