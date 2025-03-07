@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import loadingGif from './assets/logo/loading.gif'; // Importar el GIF de carga
-import './MyList.css'; // Importar el archivo CSS
+import './MyList.css'; // Import CSS file
 
 function MyList({ userId, setView, setCurrentBook }) {
   const [books, setBooks] = useState([]);
@@ -9,18 +8,21 @@ function MyList({ userId, setView, setCurrentBook }) {
   const [bookName, setBookName] = useState("");
   const [showInput, setShowInput] = useState(false);
   const [actionType, setActionType] = useState("");
-  const [downloadingBook, setDownloadingBook] = useState(null); // Estado para el libro que se está descargando
+  const [downloadingBook, setDownloadingBook] = useState(null);
 
-  // Obtener libros del servidor
+  // Fetch books from server
   const fetchBooks = async () => {
     try {
       const response = await fetch(`https://versevault-pro.onrender.com/user/${userId}/books`);
       if (!response.ok) {
-        throw new Error(response.status === 404 ? "No se encontraron libros para este usuario." : "Error al obtener los libros.");
+        throw new Error(response.status === 404 
+          ? "No books found for this user." 
+          : "Error fetching books."
+        );
       }
       const data = await response.json();
 
-      // Verificar si los libros están descargados
+      // Check if books are downloaded
       const booksWithDownloadStatus = await Promise.all(
         data.map(async (book) => {
           const downloadResponse = await fetch(`https://versevault-pro.onrender.com/user/${userId}/books/${book.id_libro}/isDownloaded`);
@@ -41,13 +43,9 @@ function MyList({ userId, setView, setCurrentBook }) {
     fetchBooks();
   }, [userId]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
-  if (books.length === 0) return <div>No hay libros en tu lista.</div>;
-
-  // Función para descargar libros
+  // Function to download books
   const handleDownloadBook = async (bookName, authorName) => {
-    setDownloadingBook(bookName); // Mostrar el GIF de carga
+    setDownloadingBook(bookName);
     try {
       const response = await fetch(`https://versevault-pro.onrender.com/user/${userId}/books/download`, {
         method: "POST",
@@ -57,7 +55,6 @@ function MyList({ userId, setView, setCurrentBook }) {
 
       const data = await response.json();
       if (response.ok) {
-        //alert("Descarga completada. Revisa la carpeta 'libros'.");
         setBooks((prevBooks) =>
           prevBooks.map((book) =>
             book.titulo === bookName ? { ...book, descargado: true } : book
@@ -67,13 +64,13 @@ function MyList({ userId, setView, setCurrentBook }) {
         setError(data.message);
       }
     } catch (err) {
-      setError("Error al descargar el libro.");
+      setError("Error downloading the book.");
     } finally {
-      setDownloadingBook(null); // Ocultar el GIF de carga
+      setDownloadingBook(null);
     }
   };
 
-  // Otras funciones (Eliminar, Agregar, Leer)
+  // Delete book function
   const handleDeleteBook = async (bookName) => {
     try {
       const response = await fetch(`https://versevault-pro.onrender.com/user/${userId}/books/delete`, {
@@ -89,16 +86,21 @@ function MyList({ userId, setView, setCurrentBook }) {
         setError(data.message);
       }
     } catch (err) {
-      setError("Error al eliminar el libro.");
+      setError("Error deleting the book.");
     }
   };
 
+  // Add book function
   const handleAddBook = async (bookName) => {
     try {
-      const response = await fetch(`http://localhost:5000/addBook`, {
+      const response = await fetch(`https://versevault-pro.onrender.com/addBook`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, tituloLibro: bookName, fecha_lec: new Date().toISOString().split("T")[0] }),
+        body: JSON.stringify({ 
+          userId, 
+          tituloLibro: bookName, 
+          fecha_lec: new Date().toISOString().split("T")[0] 
+        }),
       });
 
       const data = await response.json();
@@ -108,25 +110,26 @@ function MyList({ userId, setView, setCurrentBook }) {
         setError(data.message);
       }
     } catch (err) {
-      setError("Error al agregar el libro.");
+      setError("Error adding the book.");
     }
   };
 
+  // Read book function
   const handleReadBook = (bookName, currentPage) => {
     setCurrentBook({ bookName, currentPage });
     setView("readBook");
   };
 
-  // Mostrar input según la acción
+  // Show input based on action
   const handleButtonClick = (type) => {
     setActionType(type);
     setShowInput(true);
   };
 
-  // Ejecutar la acción correspondiente
+  // Execute corresponding action
   const handleAction = () => {
     if (!bookName) {
-      setError("Por favor, ingresa el nombre del libro.");
+      setError("Please enter the book name.");
       return;
     }
 
@@ -134,54 +137,153 @@ function MyList({ userId, setView, setCurrentBook }) {
       handleAddBook(bookName);
     } else if (actionType === "delete") {
       handleDeleteBook(bookName);
-    } else if (actionType === "read") {
-      handleReadBook(bookName, 0);  // Inicialmente, comenzamos desde la página 0
     }
 
     setShowInput(false);
     setBookName("");
   };
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="loading-indicator">
+        <div className="loading-symbol"></div>
+        <p>Searching the tome archives...</p>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return <div className="error-message">Error: {error}</div>;
+  }
+
+  // Empty books state
+  if (books.length === 0) {
+    return (
+      <div className="view-container">
+        <h2 className="view-title">Your Grimoire</h2>
+        <div className="empty-list">
+          <p>Your collection of tomes is empty.</p>
+          <button 
+            className="action-button" 
+            onClick={() => handleButtonClick("add")}
+          >
+            Add your first tome
+          </button>
+        </div>
+        {showInput && (
+          <div className="input-container">
+            <input
+              type="text"
+              value={bookName}
+              onChange={(e) => setBookName(e.target.value)}
+              placeholder="Enter the title of your tome"
+              className="tome-input"
+            />
+            <button className="action-button" onClick={handleAction}>
+              Confirm
+            </button>
+          </div>
+        )}
+        <button className="back-button" onClick={() => setView("home")}>
+          Return
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="container">
-      <h2 className="mylist-title">Your Book List</h2>
-      <ul>
+    <div className="view-container mylist-container">
+      <h2 className="view-title">Your Grimoire</h2>
+      
+      <ul className="tome-list">
         {books.map((book) => (
-          <li key={book.id_libro}>
-            <div className="book-info">
-              <strong>{book.titulo}</strong><span>{book.autor}</span>
+          <li key={book.id_libro} className="tome-item">
+            <div className="tome-header">
+              <h3 className="tome-title">{book.titulo}</h3>
+              <span className="tome-author">{book.autor}</span>
             </div>
-            <br />
-            Fecha de lectura: {book.fecha_lectura}
-            <br />
-            Página actual: {book.pagina_actual}
-            <br />
-            {book.descargado ? (
-              <button className="mylist-button" onClick={() => handleReadBook(book.titulo, book.pagina_actual)}>Leer</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <button className="mylist-button" onClick={() => handleDownloadBook(book.titulo, book.autor)}>Descargar</button>
-                {downloadingBook === book.titulo && <img src={loadingGif} alt="Loading..." style={{ width: '20px', marginLeft: '10px' }} />}
+            
+            <div className="tome-details">
+              <div className="detail-row">
+                <span className="detail-label">Last reading:</span>
+                <span className="detail-value">{book.fecha_lectura}</span>
               </div>
-            )}
+              
+              <div className="detail-row">
+                <span className="detail-label">Current page:</span>
+                <span className="detail-value">{book.pagina_actual}</span>
+              </div>
+            </div>
+            
+            <div className="tome-actions">
+              {book.descargado ? (
+                <button 
+                  className="action-button read-button" 
+                  onClick={() => handleReadBook(book.titulo, book.pagina_actual)}
+                >
+                  <span className="button-text">Read</span>
+                </button>
+              ) : (
+                <div className="download-container">
+                  <button 
+                    className="action-button download-button" 
+                    onClick={() => handleDownloadBook(book.titulo, book.autor)}
+                    disabled={downloadingBook === book.titulo}
+                  >
+                    <span className="button-text">
+                      {downloadingBook === book.titulo ? "Summoning..." : "Summon"}
+                    </span>
+                  </button>
+                  {downloadingBook === book.titulo && (
+                    <div className="loading-indicator small">
+                      <div className="loading-symbol"></div>
+                    </div>
+                  )}
+                </div>
+              )}
+              <button 
+                className="action-button delete-button" 
+                onClick={() => handleDeleteBook(book.titulo)}
+              >
+                <span className="button-text">Banish</span>
+              </button>
+            </div>
           </li>
         ))}
       </ul>
-      <div>
-        <button className="mylist-action-button" onClick={() => handleButtonClick("add")}>Agregar libro a mi Lista</button>
-        <button className="mylist-action-button" onClick={() => handleButtonClick("delete")}>Eliminar libro de mi Lista</button>
+      
+      <div className="list-actions">
+        <button 
+          className="action-button add-button" 
+          onClick={() => handleButtonClick("add")}
+        >
+          <span className="button-text">Add Tome</span>
+        </button>
       </div>
+      
       {showInput && (
-        <div>
+        <div className="input-container">
           <input
             type="text"
             value={bookName}
             onChange={(e) => setBookName(e.target.value)}
-            placeholder="Nombre del libro"
+            placeholder="Enter the title of your tome"
+            className="tome-input"
           />
-          <button className="mylist-action-button" onClick={handleAction}>Confirmar</button>
+          <button 
+            className="action-button confirm-button" 
+            onClick={handleAction}
+          >
+            <span className="button-text">Confirm</span>
+          </button>
         </div>
       )}
+      
+      <button className="back-button" onClick={() => setView("home")}>
+        Return
+      </button>
     </div>
   );
 }

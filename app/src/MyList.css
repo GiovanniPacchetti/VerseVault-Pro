@@ -1,94 +1,260 @@
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .mylist-title {
-    text-align: center;
-    color: #333;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    background-color: #fff;
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    display: flex;
+/* MyList.css - Berserk Inspired Theme */
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturCook&display=swap');
+
+.mylist-container {
+  color: #d4d4d4;
+}
+
+.tome-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.tome-item {
+  background-color: rgba(20, 20, 20, 0.7);
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.tome-item:hover {
+  box-shadow: 0 0 15px rgba(153, 0, 0, 0.3);
+  border-color: #444;
+}
+
+.tome-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.8rem;
+}
+
+.tome-title {
+  font-family: 'UnifrakturCook', serif;
+  color: #fff;
+  margin: 0;
+  font-size: 1.3rem;
+  text-shadow: 0 0 8px rgba(153, 0, 0, 0.4);
+}
+
+.tome-author {
+  font-style: italic;
+  color: #aaa;
+}
+
+.tome-details {
+  margin-bottom: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #222;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: #aaa;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: #fff;
+}
+
+.tome-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.action-button {
+  background-color: rgba(30, 30, 30, 0.9);
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'UnifrakturCook', serif;
+  letter-spacing: 1px;
+  min-width: 100px;
+  text-align: center;
+}
+
+.read-button {
+  background-color: rgba(50, 50, 50, 0.9);
+}
+
+.read-button:hover {
+  background-color: rgba(80, 0, 0, 0.7);
+  border-color: #700;
+  box-shadow: 0 0 10px rgba(153, 0, 0, 0.3);
+}
+
+.download-button {
+  background-color: rgba(40, 40, 40, 0.9);
+}
+
+.download-button:hover {
+  background-color: rgba(100, 0, 0, 0.7);
+  border-color: #800;
+  box-shadow: 0 0 10px rgba(153, 0, 0, 0.3);
+}
+
+.download-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.delete-button {
+  background-color: rgba(50, 10, 10, 0.9);
+}
+
+.delete-button:hover {
+  background-color: rgba(120, 0, 0, 0.7);
+  border-color: #900;
+  box-shadow: 0 0 10px rgba(153, 0, 0, 0.3);
+}
+
+.add-button {
+  background-color: rgba(40, 40, 40, 0.9);
+  margin-right: auto;
+}
+
+.add-button:hover {
+  background-color: rgba(100, 0, 0, 0.7);
+  border-color: #800;
+  box-shadow: 0 0 10px rgba(153, 0, 0, 0.3);
+}
+
+.confirm-button {
+  background-color: rgba(100, 0, 0, 0.7);
+}
+
+.confirm-button:hover {
+  background-color: rgba(153, 0, 0, 0.7);
+  border-color: #900;
+  box-shadow: 0 0 10px rgba(153, 0, 0, 0.3);
+}
+
+.list-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.download-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.loading-indicator.small {
+  padding: 0;
+}
+
+.loading-symbol {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(153, 0, 0, 0.3);
+  border-top: 3px solid rgba(153, 0, 0, 0.8);
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loading-indicator.small .loading-symbol {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+  margin-bottom: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background-color: rgba(153, 0, 0, 0.2);
+  color: #f88;
+  padding: 1rem;
+  border-left: 3px solid #900;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.empty-list {
+  text-align: center;
+  padding: 2rem;
+  color: #aaa;
+}
+
+.input-container {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  align-items: center;
+}
+
+.tome-input {
+  flex: 1;
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+}
+
+.tome-input:focus {
+  outline: none;
+  border-color: #700;
+  box-shadow: 0 0 8px rgba(153, 0, 0, 0.3);
+}
+
+.tome-input::placeholder {
+  color: #777;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .tome-header {
     flex-direction: column;
-    line-height: 1.6; /* Agregar interlineado */
+    align-items: flex-start;
+    gap: 0.5rem;
   }
   
-  li strong {
-    font-size: 1.2em;
-    color: #333;
+  .detail-row {
+    flex-direction: column;
+    gap: 0.3rem;
   }
   
-  li .book-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .tome-actions {
+    flex-direction: column;
   }
   
-  li .mylist-button {
-    background-color: #ff5722; /* Cambiar a un color distinto al verde */
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  .input-container {
+    flex-direction: column;
   }
-  
-  li .mylist-button:hover {
-    background-color: #e64a19;
-  }
-  
-  li div {
-    display: flex;
-    align-items: center;
-  }
-  
-  li img {
-    width: 20px;
-    margin-left: 10px;
-  }
-  
-  input[type="text"] {
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .mylist-action-button {
-    background-color: #ff5722; /* Cambiar a un color distinto al verde */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin: 10px;
-  }
-  
-  .mylist-action-button:hover {
-    background-color: #e64a19;
-  }
-  
-  .error {
-    color: red;
-    text-align: center;
-    margin: 10px 0;
-  }
+}

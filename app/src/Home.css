@@ -1,50 +1,247 @@
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Home Page Styles - Berserk Inspired Theme */
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturCook&display=swap');
+
+.home-container {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #0a0a0a;
+  background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+  color: #d4d4d4;
+  font-family: 'Arial', sans-serif;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.home-title {
-    text-align: center;
-    color: #333;
+.brand-symbol {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(153, 0, 0, 0.2);
+  border: 1px solid rgba(153, 0, 0, 0.5);
+  box-shadow: 0 0 15px rgba(153, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.brand-symbol::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: 2px solid rgba(153, 0, 0, 0.8);
+  border-radius: 50%;
+}
+
+.brand-symbol::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 30px;
+  background-color: rgba(153, 0, 0, 0.8);
+}
+
+.home-content, .view-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: rgba(25, 25, 25, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  border: 1px solid #333;
+  position: relative;
+}
+
+.home-content::before, .view-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #600, #900, #c00);
+}
+
+.home-title, .view-title {
+  font-family: 'Horst Blackletter Demo', 'UnifrakturCook', serif;
+  text-align: center;
+  color: #fff;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px rgba(153, 0, 0, 0.5);
+  letter-spacing: 1px;
 }
 
 .user-info {
-    text-align: center;
-    margin: 20px 0;
+  margin: 2rem 0;
 }
 
-.user-info p {
-    margin: 5px 0;
+.user-card {
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+.user-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #333;
+}
+
+.user-detail:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: #aaa;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: #fff;
+}
+
+.home-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .home-button {
-    background-color: #ff5722;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(30, 30, 30, 0.7);
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 120px;
+  text-align: center;
 }
 
 .home-button:hover {
-    background-color: #e64a19;
+  background-color: rgba(153, 0, 0, 0.4);
+  border-color: #900;
+  box-shadow: 0 0 15px rgba(153, 0, 0, 0.3);
+  transform: translateY(-5px);
 }
 
-.error {
-    color: red;
-    text-align: center;
-    margin: 10px 0;
+.button-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.button-text {
+  font-family: 'Cloister Black', serif;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+.my-books:hover {
+  background-color: rgba(120, 0, 0, 0.4);
+}
+
+.search:hover {
+  background-color: rgba(153, 0, 0, 0.4);
+}
+
+.logout:hover {
+  background-color: rgba(180, 0, 0, 0.4);
+}
+
+.back-button {
+  background-color: rgba(153, 0, 0, 0.7);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Cloister Black', serif;
+  letter-spacing: 1px;
+  margin-top: 2rem;
+  display: block;
+  width: fit-content;
+}
+
+.back-button:hover {
+  background-color: #900;
+  box-shadow: 0 0 10px rgba(153, 0, 0, 0.5);
+}
+
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.loading-symbol {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(153, 0, 0, 0.3);
+  border-top: 3px solid rgba(153, 0, 0, 0.8);
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-indicator p {
+  color: #aaa;
+  font-style: italic;
+}
+
+.error-message {
+  background-color: rgba(153, 0, 0, 0.2);
+  color: #f88;
+  padding: 1rem;
+  border-left: 3px solid #900;
+  margin: 1rem 0;
+}
+
+/* Make sure your app is responsive */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 1rem;
+  }
+  
+  .home-content, .view-container {
+    padding: 1.5rem;
+  }
+  
+  .home-title, .view-title {
+    font-size: 1.5rem;
+  }
+  
+  .home-actions {
+    grid-template-columns: 1fr;
+  }
+  
+  .user-detail {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
 }
