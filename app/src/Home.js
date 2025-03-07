@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MyList from "./MyList";
 import SearchBook from "./SearchBook";
 import ReadBook from "./ReadBook"; // Importar ReadBook
+import "./Home.css"; // Importar el archivo CSS
 
 function Home({ userId, setIsLoggedIn, handleLogout }) {
   const [userData, setUserData] = useState(null);
@@ -21,22 +22,22 @@ function Home({ userId, setIsLoggedIn, handleLogout }) {
   }, [userId]);
 
   return (
-    <div>
+    <div className="container">
       {view === "home" && (
         <div>
-          <h2>Welcome, {userData ? userData.name : "Guest"}!</h2>
+          <h2 className="home-title">Welcome, {userData ? userData.name : "Guest"}!</h2>
           {userData ? (
-            <div>
+            <div className="user-info">
               <p>Email: {userData.email}</p>
               <p>Member since: {userData.dateJoined}</p>
             </div>
           ) : (
-            <p>Loading your data...</p>
+            <p className="loading">Loading your data...</p>
           )}
-          <div>
-            <button onClick={() => setView("list")}>See My List</button>
-            <button onClick={() => setView("searchBook")}>Search a Book</button>
-            <button onClick={() => { handleLogout(); setView("home"); }}>Log Out</button>
+          <div className="button-group">
+            <button className="home-button" onClick={() => setView("list")}>See My List</button>
+            <button className="home-button" onClick={() => setView("searchBook")}>Search a Book</button>
+            <button className="home-button" onClick={() => { handleLogout(); setView("home"); }}>Log Out</button>
           </div>
         </div>
       )}
@@ -45,7 +46,7 @@ function Home({ userId, setIsLoggedIn, handleLogout }) {
         <div>
           <h3>Your Book List</h3>
           <MyList userId={userId} setView={setView} setCurrentBook={setCurrentBook} />
-          <button onClick={() => setView("home")}>Go Back</button>
+          <button className="home-button" onClick={() => setView("home")}>Go Back</button>
         </div>
       )}
 
@@ -53,7 +54,7 @@ function Home({ userId, setIsLoggedIn, handleLogout }) {
         <div>
           <h3>Search a Book</h3>
           <SearchBook userId={userId} />
-          <button onClick={() => setView("home")}>Go Back</button>
+          <button className="home-button" onClick={() => setView("home")}>Go Back</button>
         </div>
       )}
 

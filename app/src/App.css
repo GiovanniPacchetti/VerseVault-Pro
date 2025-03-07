@@ -1,18 +1,33 @@
+/* Keep your existing imports and font faces */
 @import url('https://fonts.googleapis.com/css2?family=UnifrakturCook&display=swap');
 @font-face {
   font-family: 'Cloister Black';
-  src: url('./assets/fonts/CloisterBlack.ttf') format('truetype'); /* Ruta al archivo de la fuente */
+  src: url('./assets/fonts/CloisterBlack.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Horst Blackletter Demo';
-  src: url('./assets/fonts/HorstBlackletterDemo.ttf') format('truetype'); /* Ruta al archivo de la fuente */
+  src: url('./assets/fonts/HorstBlackletterDemo.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
 
+/* Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #0a0a0a;
+  color: #f0f0f0;
+}
+
+/* Original App styles */
 .App {
   text-align: center;
 }
@@ -21,12 +36,6 @@
   height: 40vmin;
   pointer-events: none;
 }
-
-/*@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}*/
 
 .App-header {
   background-color: #111111;
@@ -50,5 +59,179 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* New Login Page Styles */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+  padding: 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: rgba(20, 20, 20, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #600, #900, #c00);
+}
+
+.login-logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.login-logo {
+  height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(200, 0, 0, 0.3));
+  transition: all 0.3s ease;
+}
+
+.login-logo:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 12px rgba(200, 0, 0, 0.5));
+}
+
+.login-subtitle {
+  font-family: 'Cloister Black', serif;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #aaa;
+  letter-spacing: 1px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 0.8rem 1rem;
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #900;
+  box-shadow: 0 0 0 2px rgba(153, 0, 0, 0.25);
+  background-color: rgba(40, 40, 40, 0.8);
+}
+
+.form-group input::placeholder {
+  color: #666;
+}
+
+.login-message {
+  padding: 0.8rem;
+  background-color: rgba(153, 0, 0, 0.2);
+  border-left: 3px solid #900;
+  color: #f88;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.login-button {
+  padding: 0.8rem;
+  background-color: #900;
+  color: #fff;
+  font-family: 'Cloister Black', serif;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.login-button:hover, .login-button:focus {
+  background-color: #a00;
+  box-shadow: 0 0 10px rgba(170, 0, 0, 0.5);
+}
+
+.login-button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #333;
+}
+
+.login-link {
+  color: #aaa;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-link:hover, .login-link:focus {
+  color: #c00;
+  text-decoration: underline;
+}
+
+.login-footer {
+  text-align: center;
+  font-family: 'Cloister Black', serif;
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 2rem;
+  letter-spacing: 1px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+  
+  .login-logo {
+    height: 100px;
   }
 }
