@@ -1,19 +1,17 @@
 {
   "files": {
-    "main.css": "/VerseVault-Pro/static/css/main.9a462956.css",
-    "main.js": "/VerseVault-Pro/static/js/main.e11bc7ba.js",
-    "static/js/453.a6a97343.chunk.js": "/VerseVault-Pro/static/js/453.a6a97343.chunk.js",
+    "main.css": "/VerseVault-Pro/static/css/main.0f2cdee8.css",
+    "main.js": "/VerseVault-Pro/static/js/main.aa9c033b.js",
     "static/media/Adobe Express - file (1).png": "/VerseVault-Pro/static/media/Adobe Express - file (1).9e03b4df67ee2c68b9e2.png",
     "static/media/loading.gif": "/VerseVault-Pro/static/media/loading.90672f1deffccbcdf4f1.gif",
     "static/media/CloisterBlack.ttf": "/VerseVault-Pro/static/media/CloisterBlack.0a8dea1a656175f7a896.ttf",
     "static/media/HorstBlackletterDemo.ttf": "/VerseVault-Pro/static/media/HorstBlackletterDemo.22b75afa94c24419daa7.ttf",
     "index.html": "/VerseVault-Pro/index.html",
-    "main.9a462956.css.map": "/VerseVault-Pro/static/css/main.9a462956.css.map",
-    "main.e11bc7ba.js.map": "/VerseVault-Pro/static/js/main.e11bc7ba.js.map",
-    "453.a6a97343.chunk.js.map": "/VerseVault-Pro/static/js/453.a6a97343.chunk.js.map"
+    "main.0f2cdee8.css.map": "/VerseVault-Pro/static/css/main.0f2cdee8.css.map",
+    "main.aa9c033b.js.map": "/VerseVault-Pro/static/js/main.aa9c033b.js.map"
   },
   "entrypoints": [
-    "static/css/main.9a462956.css",
-    "static/js/main.e11bc7ba.js"
+    "static/css/main.0f2cdee8.css",
+    "static/js/main.aa9c033b.js"
   ]
 }
